@@ -1,0 +1,48 @@
+<head>
+	<style>
+	body{background-color:#aaa;}
+	button{background-color:#eee;border:2px solid black;border-radius:10px;min-width:10%;}
+	input{min-width:89%;}
+	.a,.b{font-size:20px;min-width:50%;display:block;padding-left:1%;}
+	.a{background-color:#eee}
+	.b{background-color:#ccc}
+	.c{padding:1%;margin:1% 20%;background-color:#ace;border-radius:20px;}
+	.d{overflow:hidden;border:2px solid black;border-radius:20px;margin-bottom:1%;}
+	</style>
+</head>
+<body>
+	<div class="c">
+		<div class="d">
+			<span class="a" id="0"><%=messages[0]%></span>
+			<span class="b" id="1"><%=messages[1]%></span>
+			<span class="a" id="2"><%=messages[2]%></span>
+			<span class="b" id="3"><%=messages[3]%></span>
+			<span class="a" id="4"><%=messages[4]%></span>
+			<span class="b" id="5"><%=messages[5]%></span>
+			<span class="a" id="6"><%=messages[6]%></span>
+			<span class="b" id="7"><%=messages[7]%></span>
+			<span class="a" id="8"><%=messages[8]%></span>
+			<span class="b" id="9"><%=messages[9]%></span>
+		</div>
+		<form method="POST" action="http://10.0.0.42:8000/">
+			<input id="message" type="text" name="message" placeholder="Start typing">
+			<button type="submit">Send</button>
+		</form>
+	</div>
+	<script>
+	document.getElementById("message").focus();
+	setInterval(() => {
+		let n = new XMLHttpRequest();
+		n.onreadystatechange = () => {	
+			if(n.readyState == 4 && n.status == 200){
+				let q = JSON.parse(n.responseText);
+				for(let i = 0; i < 10; i ++){
+					document.getElementById(i).innerHTML = q[i] || "";
+				}
+			}
+		}
+		n.open("GET", "port", false);
+		n.send();
+	}, 10);
+	</script>
+</body>
