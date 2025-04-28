@@ -30,8 +30,10 @@ app.post("/", (req, res) => {
 				messages = ["[messages cleared]"];
 				console.log("requested message clear");
 			} else if(req.body.message == "/update"){
-				messages.push("Restarting in 5 seconds");
+				messages.push("Restarting in 5 seconds, pulling code...");
 				console.log("cued restart");
+				require("child_process").exec("git pull");
+				require("child_process").exec("npm install");
 				setTimeout(() => {
 					require("child_process").spawn(process.argv.shift(), process.argv, {
 						cwd: process.cwd(),
