@@ -24,7 +24,7 @@ app.post("/", (req, res) => {
 		messages.shift();
 	}
 	if(req.body.message != "" && req.body.message.length <= 1024){
-		messages.push(`(${new Date().toLocaleString()}) ${req.ip}:${req.body.message}`);
+		messages.push(`(${new Date().toLocaleString()}) : ${req.body.message}`);
 		console.log(`requested post "${req.body.message}" (success)`);
 	} else {
 		console.log(`requested post "${req.body.message}" (fail)`);
