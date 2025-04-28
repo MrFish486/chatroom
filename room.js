@@ -1,4 +1,5 @@
 #!/usr/bin/nodejs
+console.log("===================\nNew process spawned\n===================");
 const express = require("express");
 const app = express();
 const port = 8000;
@@ -23,9 +24,28 @@ app.post("/", (req, res) => {
 	if(messages.length >= 10){
 		messages.shift();
 	}
-	if(req.body.message != "" && req.body.message.length <= 1024){
-		messages.push(`(${new Date().toLocaleString()}) : ${req.body.message}`);
-		console.log(`requested post "${req.body.message}" (success)`);
+	if(/\S/.test(req.body.message) && req.body.message.length <= 1024){
+		if(/^\/.{1,}/.test(req.body.message)){
+			if(req.body.message == "/clear"){
+				messages = ["[messages cleared]"];
+				console.log("requested message clear");
+			} else if(req.body.message == "/update"){
+				messages.push("Restarting in 5 seconds");
+				console.log("cued restart");
+				setTimeout(() => {
+					require("child_process").spawn(process.argv.shift(), process.argv, {
+						cwd: process.cwd(),
+						detached: true,
+						stdio: "inherit"
+					});
+					console.log("child process spawned, killing self");
+					process.exit();
+				}, 5000);
+			}
+		} else {
+			messages.push(`[${new Date().toLocaleString()}] ${req.body.key} : ${req.body.message}`);
+			console.log(`requested post "${req.body.message}" (success)`);
+		}
 	} else {
 		console.log(`requested post "${req.body.message}" (fail)`);
 	}

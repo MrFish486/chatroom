@@ -24,12 +24,23 @@
 			<span class="a" id="8"><%=messages[8]%></span>
 			<span class="b" id="9"><%=messages[9]%></span>
 		</div>
-		<form method="POST" action="http://73.223.68.236:8000/" autocomplete="off">
+		<form method="POST" action="http://localhost:8000/" autocomplete="off"> <? action="http://73.223.68.236:8000/" ?>
 			<input id="message" type="text" name="message" autocomplete="off" placeholder="Start typing">
+			<input id="key" type="text" hidden="true" name="key" autocomplete="off" placeholder="If you see this then something is wrong.">
 			<button type="submit">Send</button>
 		</form>
 	</div>
 	<script>
+	let u = () => {
+		return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+			(+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+		);
+	}
+	// generate key
+	localStorage.k = localStorage.k || u();
+	setInterval(() => {
+		document.getElementById("key").value = localStorage.k;
+	});
 	document.getElementById("message").focus();
 	setInterval(() => {
 		let n = new XMLHttpRequest();
