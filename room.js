@@ -48,7 +48,7 @@ app.set("view engine", "ejs");
 
 app.post("/register", (req, res) => {
 	users[req.body.uuid] = req.body.un;
-	res.redirect("/register");
+	res.redirect("/");
 });
 app.get("/register", (req, res) => {
 	res.render("register");
