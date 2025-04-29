@@ -45,7 +45,7 @@
 			document.getElementById("key").value = k;
 		});
 		document.getElementById("message").focus();
-		setInterval(() => {
+		let rcv = setInterval(() => {
 			let n = new XMLHttpRequest();
 			n.onreadystatechange = () => {	
 				if(n.readyState == 4 && n.status == 200){
