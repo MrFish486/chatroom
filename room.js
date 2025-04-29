@@ -8,6 +8,8 @@ const bodyparser = require("body-parser");
 
 var messages = [];
 var banned = [];
+var adminkeys = ["test"];
+var users = {};
 
 app.use(bodyparser.json());
 app.use(cors());
@@ -17,6 +19,23 @@ app.use(bodyparser.urlencoded({
 
 app.set("view engine", "ejs");
 
+app.post("/register", (req, res) => {
+	users[req.body.uuid] = req.body.un;
+	res.redirect("/register");
+});
+app.get("/register", (req, res) => {
+	res.render("register");
+});
+app.post("/admin", (req, res) => {
+	if(adminkeys.includes(req.body.key)){
+		res.send(eval(req.body.script));
+	} else{
+		res.send("Incorrect admin key.");
+	}
+});
+app.get("/admin", (req, res) => {
+	res.render("admin");
+});
 app.post("/", (req, res) => {
 	if(banned.includes(req.socket.remoteAddress)){
 		return res.status(403).render("banned");
@@ -33,7 +52,7 @@ app.post("/", (req, res) => {
 				messages.push("Restarting in 5 seconds, pulling code...");
 				console.log("cued restart");
 				require("child_process").exec("git pull");
-				require("child_process").exec("npm install");
+				require("child_process").exec("npm i");
 				setTimeout(() => {
 					require("child_process").spawn(process.argv.shift(), process.argv, {
 						cwd: process.cwd(),
@@ -45,7 +64,7 @@ app.post("/", (req, res) => {
 				}, 5000);
 			}
 		} else {
-			messages.push(`[${new Date().toLocaleString()}] ${req.body.key} : ${req.body.message}`);
+			messages.push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "anonymous " + req.body.key} : ${req.body.message}`);
 			console.log(`requested post "${req.body.message}" (success)`);
 		}
 	} else {
