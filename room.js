@@ -8,7 +8,7 @@ const bodyparser = require("body-parser");
 
 var messages = [];
 var banned = [];
-var adminkeys = ["test"];
+var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 
 app.use(bodyparser.json());

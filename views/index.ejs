@@ -24,12 +24,14 @@
 			<span class="a" id="8"><%=messages[8]%></span>
 			<span class="b" id="9"><%=messages[9]%></span>
 		</div>
-		<form method="POST" action="http://localhost:8000/" autocomplete="off"> <? action="http://73.223.68.236:8000/" ?>
+		<form method="POST" action="http://73.223.68.236:8000/" autocomplete="off"> <? action="http://73.223.68.236:8000/" ?>
 			<input id="message" type="text" name="message" autocomplete="off" placeholder="Start typing">
 			<input id="key" type="text" hidden="true" name="key" autocomplete="off" placeholder="If you see this then something is wrong.">
 			<button type="submit">Send</button>
 		</form>
-		<a>Not registered? Register <a href="register">here</a></a>
+		<a>Not registered? Register <a href="register">here</a></a><br>
+		<a>Admin pannel : <a href="admin">here</a></a><br>
+		<a>Also, use /clear to clear!</a>
 	</div>
 	<script>
 	let u = () => {
