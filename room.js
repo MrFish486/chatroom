@@ -10,6 +10,21 @@ var messages = [];
 var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
+var update = () => {
+	messages.push("Restarting in 5 seconds, pulling code...");
+	console.log("cued restart");
+	require("child_process").exec("git pull");
+	require("child_process").exec("npm i");
+	setTimeout(() => {
+		require("child_process").spawn(process.argv.shift(), process.argv, {
+			cwd: process.cwd(),
+			detached: true,
+			stdio: "inherit"
+		});
+		console.log("child process spawned, killing self");
+		process.exit();
+	}, 5000);
+}
 
 app.use(bodyparser.json());
 app.use(cors());
@@ -48,20 +63,6 @@ app.post("/", (req, res) => {
 			if(req.body.message == "/clear"){
 				messages = ["[messages cleared]"];
 				console.log("requested message clear");
-			} else if(req.body.message == "/update"){
-				messages.push("Restarting in 5 seconds, pulling code...");
-				console.log("cued restart");
-				require("child_process").exec("git pull");
-				require("child_process").exec("npm i");
-				setTimeout(() => {
-					require("child_process").spawn(process.argv.shift(), process.argv, {
-						cwd: process.cwd(),
-						detached: true,
-						stdio: "inherit"
-					});
-					console.log("child process spawned, killing self");
-					process.exit();
-				}, 5000);
 			}
 		} else {
 			messages.push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "anonymous " + req.body.key} : ${req.body.message}`);
