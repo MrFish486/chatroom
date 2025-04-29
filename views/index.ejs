@@ -32,29 +32,41 @@
 		<a>Not registered? Register <a href="register">here</a></a><br>
 	</div>
 	<script>
-	let u = () => {
-		return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-			(+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-		);
-	}
-	// generate key
-	localStorage.k = localStorage.k || u();
-	setInterval(() => {
-		document.getElementById("key").value = localStorage.k;
-	});
-	document.getElementById("message").focus();
-	setInterval(() => {
-		let n = new XMLHttpRequest();
-		n.onreadystatechange = () => {	
-			if(n.readyState == 4 && n.status == 200){
-				let q = JSON.parse(n.responseText);
-				for(let i = 0; i < 10; i ++){
-					document.getElementById(i).innerHTML = q[i] || "";
+	(() => {
+		let k = localStorage.k || u();
+		let u = () => {
+			return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+				(+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+			);
+		}
+		// generate key
+		localStorage.k = localStorage.k || k;
+		setInterval(() => {
+			document.getElementById("key").value = k;
+		});
+		document.getElementById("message").focus();
+		setInterval(() => {
+			let n = new XMLHttpRequest();
+			n.onreadystatechange = () => {	
+				if(n.readyState == 4 && n.status == 200){
+					let q = JSON.parse(n.responseText);
+					for(let i = 0; i < 10; i ++){
+						document.getElementById(i).innerHTML = q[i] || "";
+					}
 				}
 			}
+			n.open("GET", "port", false);
+			n.send();
+		}, 100);
+		setInterval(() => {
+			localStorage.k = k;
+		});
+		window.onbeforeunload = () => {
+			localStorage.k = k;
 		}
-		n.open("GET", "port", false);
-		n.send();
-	}, 100);
+		window.onunload = () => {
+			localStorage.k = k;
+		}
+	})();
 	</script>
 </body>
