@@ -47,8 +47,12 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 
 app.post("/register", (req, res) => {
-	users[req.body.uuid] = req.body.un;
-	res.redirect("/");
+	if(!Object.keys(users).includes(req.body.un)){
+		users[req.body.uuid] = req.body.un;
+		res.redirect("/");
+	} else{
+		res.send(`The id "${req.body.uuid}" id already registered under name "${users[req.body.un]}"!`);
+	}
 });
 app.get("/register", (req, res) => {
 	res.render("register");
