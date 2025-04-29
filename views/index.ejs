@@ -51,7 +51,11 @@
 				if(n.readyState == 4 && n.status == 200){
 					let q = JSON.parse(n.responseText);
 					for(let i = 0; i < 10; i ++){
-						document.getElementById(i).innerHTML = q[i] || "";
+						requestIdleCallback(() => {
+							if(document.getElementById(i).innerHTML != q[i]){
+								document.getElementById(i).innerHTML = q[i] || "";
+							}
+						});
 					}
 				}
 			}
