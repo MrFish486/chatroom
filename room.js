@@ -47,16 +47,10 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 
 app.post("/register", (req, res) => {
-	if(banned.includes(req.body.uuid)){
-		res.status(403).render("banned");
-	}
 	users[req.body.uuid] = req.body.un;
 	res.redirect("/");
 });
 app.get("/register", (req, res) => {
-	if(banned.includes(req.body.key)){
-		res.status(403).render("banned");
-	}
 	res.render("register");
 });
 app.post("/admin", (req, res) => {
@@ -92,9 +86,6 @@ app.post("/", (req, res) => {
 	res.redirect("/");
 });
 app.get("/", (req, res) => {
-	if(banned.includes(req.body.key)){
-		return res.status(403).render("banned");
-	}
 	console.log(`requested load`);
 	res.render("index", {messages: messages});
 });
