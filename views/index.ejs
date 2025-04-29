@@ -45,7 +45,14 @@
 			document.getElementById("key").value = k;
 		});
 		document.getElementById("message").focus();
+		let sent = true;
 		let rcv = setInterval(() => {
+			if(!sent){
+				//Kill self
+				clearInterval(rcv);
+				//Kill everybody else
+				window.location.reload();
+			}
 			let n = new XMLHttpRequest();
 			n.onreadystatechange = () => {	
 				if(n.readyState == 4 && n.status == 200){
@@ -60,7 +67,9 @@
 				}
 			}
 			n.open("GET", "port", false);
+			sent = false;
 			n.send();
+			sent = true;
 		}, 100);
 		setInterval(() => {
 			localStorage.k = k;
