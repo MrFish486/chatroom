@@ -25,6 +25,16 @@ var update = () => {
 		process.exit();
 	}, 5000);
 }
+var hash = a => {
+	var h = 0, i, chr;
+	if(a.length == 0) return h;
+	for(i = 0; i < a.length; i++){
+		chr = a.charCodeAt(i);
+		h = ((h << 5) - h) + chr;
+		h |= 0;
+	}
+	return h;
+}
 
 app.use(bodyparser.json());
 app.use(cors());
@@ -67,7 +77,7 @@ app.post("/", (req, res) => {
 				console.log("requested message clear");
 			}
 		} else {
-			messages.push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "anonymous " + req.body.key} : ${req.body.message}`);
+			messages.push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${req.body.message}`);
 			console.log(`requested post "${req.body.message}" (success)`);
 		}
 	} else {
