@@ -1,12 +1,21 @@
+<head>
+	<style>
+		body{background-image:url("images/tile.png");background-repeat:repeat;}
+		button{background-color:#eee;border:2px solid black;border-radius:10px;min-width:10%}
+		input{min-width:10%}
+		.c{padding:1%;margin:1% 20%;background-color:#ace;border-radius:20px;}
+	</style>
 <body>
-	<h2>Register id</h2>
-	<button onclick="history.go(-1);">Back</button>
-	<h3 id="iddispl">Loading...</h3>
-	<form method="POST" action="http://73.223.68.236:8000/register/" autocomplete="off">
-		<a>Id:</a><input id="uuid" type="text" name="uuid" autocomplete="off"><br>
-		<a>Name:</a><input id="un" type="text" name="un" autocomplete="off">
-		<button type="submit">Register</button>
-	</form>
+	<div class="c">
+		<h2>Register id</h2>
+		<h3 id="iddispl">Loading...</h3>
+		<form method="POST" action="http://73.223.68.236:8000/register/" autocomplete="off">
+			<a>Id:</a><br><input id="uuid" type="text" name="uuid" autocomplete="off"><br>
+			<a>Name:</a><br><input id="un" type="text" name="un" autocomplete="off"><br><br>
+			<button type="submit">Register</button>
+		</form>
+		<button onclick="location.href='http://73.223.68.236:8000/'">Home</button>
+	</div>
 	<script>
 	document.getElementById("iddispl").innerHTML = "Your id is " + localStorage.k;
 	</script>
