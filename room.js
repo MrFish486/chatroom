@@ -5,6 +5,7 @@ const app = express();
 const port = 8000;
 const cors = require("cors");
 const bodyparser = require("body-parser");
+const polls = require("./polls.js");
 
 var messages = [[], []];
 var banned = [];
