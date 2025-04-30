@@ -10,6 +10,7 @@ var messages = [[], []];
 var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
+var points = {};
 var update = () => {
 	messages[0].push("Restarting in 5 seconds, pulling code...");
 	console.log("cued restart");
@@ -43,12 +44,22 @@ app.use(bodyparser.urlencoded({
 }));
 app.use(express.static(__dirname + "/public"));
 
-
 app.set("view engine", "ejs");
 
+app.get("/leaderboard", (req, res) => {
+	res.render("leaderboard", {"users" : Object.values(users), "stats" : Object.values(points)});
+});
+app.post("/award", (req, res) => {
+	if(Object.keys(users).indexOf(req.query.f) == req.query.i){
+		res.redirect("/award");
+	} else{
+		points[Object.keys(points)[parseInt(req.query.i)]] ++;
+	}
+});
 app.post("/register", (req, res) => {
 	if(!Object.keys(users).includes(req.body.uuid)){
 		users[req.body.uuid] = req.body.un;
+		points[req.body.uuid] = 0;
 		res.redirect("/");
 	} else{
 		res.send(`The id "${req.body.uuid}" id already registered under name "${users[req.body.uuid]}"!`);

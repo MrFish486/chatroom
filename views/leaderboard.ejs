@@ -1,0 +1,33 @@
+<head>
+	<style>
+	*{font-size:20px;}
+	body{background-image:url("images/tile2.png");background-repeat:repeat;display:flex;flex-wrap:wrap;}
+	button{background-color:#eee;border:2px solid black;border-radius:10px;min-width:10%;}
+	input{min-width:80%;}
+	.a,.b{font-size:20px;min-width:50%;display:block;padding-left:1%;}
+	.a{background-color:#eee}
+	.b{background-color:#ccc}
+	.c{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;margin-top:0%;}
+	.d{overflow:hidden;border:2px solid black;border-radius:20px;margin-bottom:1%;padding:1%;}
+	.e{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;min-width:80%;min-height:30%;height:50%;}
+	a{display:inline;}
+	h1{text-align:center;font-size:30px;}
+	</style>
+</head>
+<body>
+	<div class="c">
+		<h1>Leaderboard</h1>
+		<a href="/">Home</a><br><br>
+		<a>You can get points by other people awarding you them.</a>
+	</div>
+	<div class="e">
+		<h2>Users:</h2>
+		<% for(let i = 0; i < users.length; i ++){ %>
+			<div class="d">
+				<h2>Name : <%= users[i] %></h2>
+				<a>Points : <%= stats[i] %></a><br><br>
+				<button onclick="let n = new XMLHttpRequest();n.open('POST','/award?i=<%= i %>&f='+localStorage.k,true);n.send('sendpoint');window.location.reload();" id="reward<%= i %>">Reward <%= users[i] %> one point</button>
+			</div>
+		<% } %>
+	</div>
+</body>
