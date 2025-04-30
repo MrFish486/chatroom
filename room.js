@@ -47,6 +47,9 @@ app.use(express.static(__dirname + "/public"));
 
 app.set("view engine", "ejs");
 
+app.post("/poll", (req, res) => {
+	
+});
 app.get("/leaderboard", (req, res) => {
 	res.render("leaderboard", {"users" : Object.values(users), "stats" : Object.values(points)});
 });
