@@ -11,7 +11,7 @@ var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 var update = () => {
-	messages.push("Restarting in 5 seconds, pulling code...");
+	messages[0].push("Restarting in 5 seconds, pulling code...");
 	console.log("cued restart");
 	require("child_process").exec("git pull");
 	require("child_process").exec("npm i");
