@@ -6,7 +6,7 @@ const port = 8000;
 const cors = require("cors");
 const bodyparser = require("body-parser");
 
-var messages = [];
+var messages = [[], []];
 var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
@@ -47,11 +47,11 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 
 app.post("/register", (req, res) => {
-	if(!Object.keys(users).includes(req.body.un)){
+	if(!Object.keys(users).includes(req.body.uuid)){
 		users[req.body.uuid] = req.body.un;
 		res.redirect("/");
 	} else{
-		res.send(`The id "${req.body.uuid}" id already registered under name "${users[req.body.un]}"!`);
+		res.send(`The id "${req.body.uuid}" id already registered under name "${users[req.body.uuid]}"!`);
 	}
 });
 app.get("/register", (req, res) => {
@@ -71,17 +71,17 @@ app.post("/", (req, res) => {
 	if(banned.includes(req.body.key)){
 		return res.status(403).render("banned");
 	}
-	if(messages.length >= 10){
-		messages.shift();
-	}
 	if(/\S/.test(req.body.message) && req.body.message.length <= 1024){
 		if(/^\/.{1,}/.test(req.body.message)){
 			if(req.body.message == "/clear"){
-				messages = ["[messages cleared]"];
+				messages[req.body.pannel] = ["[messages cleared]"];
 				console.log("requested message clear");
 			}
 		} else {
-			messages.push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${req.body.message}`);
+			messages[req.body.pannel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${req.body.message}`);
+			if(messages[req.body.pannel].length >= 10){
+				messages[req.body.pannel].shift();
+			}
 			console.log(`requested post "${req.body.message}" (success)`);
 		}
 	} else {

@@ -1,35 +1,70 @@
 <head>
 	<style>
-	body{background-image:url("images/tile2.png");background-repeat:repeat;}
+	*{font-size:20px;}
+	body{background-image:url("images/tile2.png");background-repeat:repeat;display:flex;flex-wrap:wrap;}
 	button{background-color:#eee;border:2px solid black;border-radius:10px;min-width:10%;}
-	input{min-width:89%;}
+	input{min-width:80%;}
 	.a,.b{font-size:20px;min-width:50%;display:block;padding-left:1%;}
 	.a{background-color:#eee}
 	.b{background-color:#ccc}
-	.c{padding:1%;margin:1% 20%;background-color:#ace;border-radius:20px;}
+	.c{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;}
 	.d{overflow:hidden;border:2px solid black;border-radius:20px;margin-bottom:1%;}
+	.e{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;min-width:80%;min-height:25%;}
+	a{display:inline;}
 	</style>
 </head>
 <body>
 	<div class="c">
 		<div class="d">
-			<span class="a" id="0"><%=messages[0]%></span>
-			<span class="b" id="1"><%=messages[1]%></span>
-			<span class="a" id="2"><%=messages[2]%></span>
-			<span class="b" id="3"><%=messages[3]%></span>
-			<span class="a" id="4"><%=messages[4]%></span>
-			<span class="b" id="5"><%=messages[5]%></span>
-			<span class="a" id="6"><%=messages[6]%></span>
-			<span class="b" id="7"><%=messages[7]%></span>
-			<span class="a" id="8"><%=messages[8]%></span>
-			<span class="b" id="9"><%=messages[9]%></span>
+			<span class="a" id="00"><%=messages[0][0]%></span>
+			<span class="b" id="01"><%=messages[0][1]%></span>
+			<span class="a" id="02"><%=messages[0][2]%></span>
+			<span class="b" id="03"><%=messages[0][3]%></span>
+			<span class="a" id="04"><%=messages[0][4]%></span>
+			<span class="b" id="05"><%=messages[0][5]%></span>
+			<span class="a" id="06"><%=messages[0][6]%></span>
+			<span class="b" id="07"><%=messages[0][7]%></span>
+			<span class="a" id="08"><%=messages[0][8]%></span>
+			<span class="b" id="09"><%=messages[0][9]%></span>
 		</div>
 		<form method="POST" action="http://73.223.68.236:8000/" autocomplete="off"> <? action="http://73.223.68.236:8000/" ?>
-			<input id="message" type="text" name="message" autocomplete="off" placeholder="Start typing">
-			<input id="key" type="text" hidden="true" name="key" autocomplete="off" placeholder="If you see this then something is wrong.">
+			<input id="0message" type="text" name="message" autocomplete="off" placeholder="Start typing" accesskey="z">
+			<input id="0key" type="text" hidden="true" name="key" autocomplete="off" placeholder="If you see this then something is wrong.">
+			<input id="0pannel" type="text" hidden="true" name="pannel" autcomplete="off" placeholder="0" value="0">
 			<button type="submit">Send</button>
 		</form>
-		<a>Not registered? Register <a href="register">here</a></a><br>
+	</div>
+	<div class="c">
+		<div class="d">
+			<span class="a" id="10"><%=messages[1][0]%></span>
+			<span class="b" id="11"><%=messages[1][1]%></span>
+			<span class="a" id="12"><%=messages[1][2]%></span>
+			<span class="b" id="13"><%=messages[1][3]%></span>
+			<span class="a" id="14"><%=messages[1][4]%></span>
+			<span class="b" id="15"><%=messages[1][5]%></span>
+			<span class="a" id="16"><%=messages[1][6]%></span>
+			<span class="b" id="17"><%=messages[1][7]%></span>
+			<span class="a" id="18"><%=messages[1][8]%></span>
+			<span class="b" id="19"><%=messages[1][9]%></span>
+		</div>
+		<form method="POST" action="http://73.223.68.236:8000/" autocomplete="off"> <? action="http://73.223.68.236:8000/" ?>
+			<input id="1message" type="text" name="message" autocomplete="off" placeholder="Start typing" accesskey="x">
+			<input id="1key" type="text" hidden="true" name="key" autocomplete="off" placeholder="If you see this then something is wrong.">
+			<input id="1pannel" type="text" hidden="true" name="pannel" autcomplete="off" placeholder="1" value="1">
+			<button type="submit">Send</button>
+		</form>
+	</div><br>
+	<div class="e">
+		<b><a>Not registered? Register <a href="register">here</a>!</a></b><br><br>
+		<a>Some things to remember:</a>
+		<ul>
+			<li><a><a target="_blank" href="https://en.wikipedia.org/wiki/Etiquette_in_technology">Don't use all caps</a>; I can ban you</a></li>
+			<li><a>The server is restarted frequently so you might have to register again</a></li>
+			<li><a>Using your actual name is helpful but not required</a></li>
+			<li><b>Alt + z</b><a> to select the left text box</a></li>
+			<li><b>Alt + x</b><a> to select the right text box</a></li>
+			<li><b>Ctrl + q</b><a> to switch between the left and right text boxes</a></li>
+		</ul>
 	</div>
 	<script>
 	(() => {
@@ -42,9 +77,9 @@
 		let k = localStorage.k || u();
 		localStorage.k = localStorage.k || k;
 		setInterval(() => {
-			document.getElementById("key").value = k;
+			document.getElementById("0key").value = k;
+			document.getElementById("1key").value = k;
 		});
-		document.getElementById("message").focus();
 		let sent = true;
 		let rcv = setInterval(() => {
 			if(!sent){
@@ -59,8 +94,11 @@
 					let q = JSON.parse(n.responseText);
 					for(let i = 0; i < 10; i ++){
 						requestIdleCallback(() => {
-							if(document.getElementById(i).innerHTML != q[i]){
-								document.getElementById(i).innerHTML = q[i] || "";
+							if(document.getElementById(`0${i}`).innerHTML != q[0][i]){
+								document.getElementById(`0${i}`).innerHTML = q[0][i] || "";
+							}
+							if(document.getElementById(`1${i}`).innerHTML != q[1][i]){
+								document.getElementById(`1${i}`).innerHTML = q[1][i] || "";
 							}
 						});
 					}
@@ -80,6 +118,19 @@
 		window.onunload = () => {
 			localStorage.k = k;
 		}
+		document.addEventListener("keydown", e => {
+			if(e.key == "q" && e.ctrlKey){
+				for(let i = 0; i < 1; i ++){
+					if(document.getElementById(`${i}message`) != document.activeElement){
+					}
+				}
+				if(document.getElementById("0message") == document.activeElement){
+					document.getElementById("1message").focus();
+				} else {
+					document.getElementById("0message").focus();
+				}
+			}
+		});
 	})();
 	</script>
 </body>
