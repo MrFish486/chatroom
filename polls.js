@@ -8,7 +8,7 @@ class poll {
 		this.results = {};
 	}
 	over () {
-		return (this.start + time) >= new Date() * 1;
+		return (this.start + this.time) <= new Date() * 1;
 	}
 	promiseOver () {
 		return new Promise((res, rej) => {
@@ -28,12 +28,23 @@ class poll {
 		}
 	}
 	result () {
-		if (Object.values(this.results).filter(a => a == "a") > Object.values(this.results).filter(a => a == "b") {
+		if (Object.values(this.results).filter(a => a == "a").length > Object.values(this.results).filter(a => a == "b").length) {
 			return "a";
-		} else if (Object.values(this.results).filter( a => a == "b") > Object.values(this.results).filter(a => a == "a")) {
+		} else if (Object.values(this.results).filter( a => a == "b").length > Object.values(this.results).filter(a => a == "a").length) {
 			return "b";
 		} else {
 			return undefined;
 		}
 	}
+	a () {
+		return Object.values(this.results).filter(a => a == "a").length / Object.values(this.results).length;
+	}
+	b () {
+		return Object.values(this.results).filter(a => a == "b").length / Object.values(this.results).length;
+	}
+	winners () {
+		return Object.keys(this.results).filter(q => this.results[q] == this.result());
+	}
 }
+
+module.exports = {poll}

@@ -1,0 +1,41 @@
+<head>
+	<style>
+	*{font-size:20px;}
+	body{background-image:url("images/tile2.png");background-repeat:repeat;display:flex;flex-wrap:wrap;}
+	button{background-color:#eee;border:2px solid black;border-radius:10px;min-width:10%;}
+	input{min-width:80%;}
+	.a,.b{font-size:20px;min-width:50%;display:block;padding-left:1%;}
+	.a{background-color:#eee}
+	.b{background-color:#ccc}
+	.c{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;margin-top:0%;}
+	.d{overflow:hidden;border:2px solid black;border-radius:20px;margin-bottom:1%;}
+	.e{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;min-width:80%;min-height:30%;}
+	a{display:inline;}
+	h1{text-align:center;font-size:30px;}
+	</style>
+</head>
+<body>
+	<div class="c">
+		<h1>Poll results</h1>
+		<a href="/">Home</a><br><br>
+		<a>The poll has ended, wait for a new one.</a>
+	</div>
+	<div class="e">
+		<h2><%= poll.question %></h2>
+		<a><%= poll.options[0] %> (<%= poll.a() * 100 %>% people)</a><br>
+		<a><%= poll.options[1] %> (<%= poll.b() * 100 %>% people)</a><br>
+		<a><%= Object.keys(poll.results).length %> response(s) collected.</a><br>
+		<a>Your earnings : </a><a id="didyouwin">Loading...</a>
+	</div>
+	<script>
+		var winners = "<%= poll.winners() %>".split(",");
+		var won = winners.includes(localStorage.k);
+		if (won) {
+			document.getElementById("didyouwin").innerHTML = "+100 points";
+			document.getElementById("didyouwin").style.color = "green";
+		} else {
+			document.getElementById("didyouwin").innerHTML = "no bonus";
+			document.getElementById("didyouwin").style.color = "red";
+		}
+	</script>
+</body>

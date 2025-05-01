@@ -18,12 +18,25 @@
 	<div class="c">
 		<h1>Polls</h1>
 		<a href="/">Home</a><br><br>
-		<a>You get points if you have the same answer as the majority of peeople.</a>
+		<a>You get points if you have the same answer as the majority of peeople.</a><br>
+		<a>You get no points if it is a tie.</a>
 	</div>
 	<div class="e">
 		<h2><%= poll.question %></h2>
-		<a><%= poll.results.length %> responses collected.<a>
-		<button id="a" onclick="let n=new XMLHttpRequest();n.open('POST','/poll?a=a&f=<%= localStorage.k %>',true);n.send();window.location.reload();"><%= poll.options[0] %></button>
-		<button id="b" onclick="let n=new XMLHttpRequest();n.open('POST','/poll?a=b&f=<%= localStorage.k %>',true);n.send();window.location.reload();"><%= poll.options[1] %></button>
+		<a><%= Object.keys(poll.results).length %> response(s) collected.<a>
+		<button id="a" onclick="let n=new XMLHttpRequest();n.open('POST','/poll?a=a&f=' + localStorage.k,true);n.send();window.location.reload();"><%= poll.options[0] %></button>
+		<button id="b" onclick="let n=new XMLHttpRequest();n.open('POST','/poll?a=b&f=' + localStorage.k,true);n.send();window.location.reload();"><%= poll.options[1] %></button>
+		<a id="timeleft">Loading...</a>
 	</div>
+	<script>
+		var start = <%= poll.start %>;
+		var time = <%= poll.time %>;
+		let q = setInterval(() => {
+			document.getElementById("timeleft").innerHTML = "Time left : " + (((start + time) - new Date() * 1)) / 1000;
+			if(((start + time) - new Date() * 1) <= 0) {
+				clearInterval(q);
+				window.location.reload();
+			}
+		},10);
+	</script>
 </body>

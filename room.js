@@ -6,23 +6,30 @@ const port = 8000;
 const cors = require("cors");
 const bodyparser = require("body-parser");
 const polls = require("./polls.js");
+const fs = require("fs");
+const cp = require("child_process");
 
+var poll = new polls.poll("Vanilla vs Chocolate", 30000, ["Vanilla", "Chocolate"]);
 var messages = [[], []];
 var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 var points = {};
 var update = () => {
-	messages[0].push("Restarting in 5 seconds, pulling code...");
+	messages[0].push("Restart cued");
 	console.log("cued restart");
-	require("child_process").exec("git pull");
-	require("child_process").exec("npm i");
+	cp.exec("git pull");
+	messages[0].push("Code pulled");
+	cp.exec("npm i");
+	messages[0].push("Aditional modules installed");
 	setTimeout(() => {
-		require("child_process").spawn(process.argv.shift(), process.argv, {
+		messages[0].push("Spawning process");
+		cp.spawn(process.argv.shift(), process.argv, {
 			cwd: process.cwd(),
 			detached: true,
 			stdio: "inherit"
 		});
+		messages[0].push("Exiting...");
 		console.log("child process spawned, killing self");
 		process.exit();
 	}, 5000);
@@ -37,6 +44,30 @@ var hash = a => {
 	}
 	return h;
 }
+var setPoll = (question, time, options) => {
+	var poll = new polls.poll(question, time, options);
+	poll.overPromise().then(() => {
+		poll.winners.forEach((v, i) => {
+			points[v] += 100;
+		}); 
+	});
+}
+var save = () => {
+	try {
+		fs.writeFileSync(__dirname + "/../stat/savedstate.json", JSON.stringify({users : users, points : points}));
+	} catch (e) {
+		return e;
+	}
+}
+var load = () => {
+	try {
+		let q = JSON.parse(fs.readFileSync(__dirname + "/../stat/savedstate.json", "utf8"));
+		users = q.users;
+		points = q.points;
+	} catch (e) {
+		return e;
+	}
+}
 
 app.use(bodyparser.json());
 app.use(cors());
@@ -47,8 +78,16 @@ app.use(express.static(__dirname + "/public"));
 
 app.set("view engine", "ejs");
 
+app.get("/poll", (req, res) => {
+	if(poll.over()){
+		res.render("pollresults", {poll : poll});
+	} else {
+		res.render("poll", {poll : poll});
+	}
+});
 app.post("/poll", (req, res) => {
-	
+	console.log(req.query);
+	poll.answer(req.query.f, req.query.a);
 });
 app.get("/leaderboard", (req, res) => {
 	res.render("leaderboard", {"users" : Object.values(users), "stats" : Object.values(points)});
