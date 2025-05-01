@@ -47,4 +47,4 @@ class poll {
 	}
 }
 
-module.exports = {poll}
+module.exports = {poll};
