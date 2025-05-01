@@ -9,7 +9,7 @@ const polls = require("./polls.js");
 const fs = require("fs");
 const cp = require("child_process");
 
-var poll = new polls.poll("Vanilla vs Chocolate", 30000, ["Vanilla", "Chocolate"]);
+var poll = new polls.poll("Are cats or dogs better?", 86400000, ["Cats", "Dogs"]);
 var messages = [[], []];
 var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
@@ -46,7 +46,7 @@ var hash = a => {
 }
 var setPoll = (question, time, options) => {
 	var poll = new polls.poll(question, time, options);
-	poll.overPromise().then(() => {
+	poll.promiseOver().then(() => {
 		poll.winners.forEach((v, i) => {
 			points[v] += 100;
 		}); 
