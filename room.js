@@ -10,7 +10,6 @@ const fs = require("fs");
 const cp = require("child_process");
 const replaceProfanities = require("no-profanity").replaceProfanities;
 
-
 var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
 poll.promiseOver().then(() => {
 	poll.winners().forEach((v, i) => {
