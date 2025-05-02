@@ -120,7 +120,7 @@ app.post("/award", (req, res) => {
 		res.redirect("/award");
 	} else{
 		points[Object.keys(points)[parseInt(req.query.i)]] ++;
-		console.log(`${users[req.query.f]} (${req.query.f}) rewarded ${Object.values(users)[i]} (${Object.keys(users)[i]}) 1 point`);
+		console.log(`${users[req.query.f]} (${req.query.f}) rewarded ${Object.values(users)[req.query.i]} (${Object.keys(users)[req.query.i]}) 1 point`);
 	}
 });
 app.post("/register", (req, res) => {
