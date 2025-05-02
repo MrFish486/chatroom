@@ -21,7 +21,7 @@ var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 var points = {};
 var update = () => {
-	console.log("\e[1;31mcued restart\e[0m");
+	console.log("\033[1;31m" + "cued restart" + "\033[0m");
 	messages[0].push("Restart cued");
 	save();
 	messages[0].push("Data saved");
@@ -96,14 +96,17 @@ app.set("view engine", "ejs");
 app.get("/poll", (req, res) => {
 	if(poll.over()){
 		res.render("pollresults", {poll : poll});
+		console.log("requested load poll, pollresults sent");
 	} else {
 		res.render("poll", {poll : poll});
+		console.log("requested load poll");
 	}
 });
 app.post("/poll", (req, res) => {
 	poll.answer(req.query.f, req.query.a);
 });
 app.get("/leaderboard", (req, res) => {
+	console.log("requested load leaderboard");
 	res.render("leaderboard", {"users" : Object.values(users), "stats" : Object.values(points)});
 });
 app.post("/award", (req, res) => {
@@ -111,32 +114,42 @@ app.post("/award", (req, res) => {
 		return res.status(403).render("banned");
 	}
 	if(Object.keys(users).indexOf(req.query.f) == req.query.i){
+		console.log("\033[1;33m" + `${users[req.query.f]} (${req.query.f}) tried to reward themself` + "\033[0m");
 		res.redirect("/award");
 	} else{
 		points[Object.keys(points)[parseInt(req.query.i)]] ++;
+		console.log(`${users[req.query.f]} (${req.query.f}) rewarded ${Object.values(users)[i]} (${Object.keys(users)[i]}) 1 point`);
 	}
 });
 app.post("/register", (req, res) => {
-	if(!Object.keys(users).includes(req.body.uuid)){
+	if(req.body.un.length > 32) {
+		res.status(413).send("Request too large. Try a name with less than 32 characters.")
+	} else if(!Object.keys(users).includes(req.body.uuid)){
 		users[req.body.uuid] = req.body.un;
 		points[req.body.uuid] = 0;
+		console.log(`registered ${req.body.uuid} as ${req.body.un} (success)`);
 		res.redirect("/");
 	} else{
 		res.send(`You are already registered under name "${users[req.body.uuid]}"!`);
+		console.log("\033[1;33m" + `attempted rename ${users[req.body.uuid]} to ${req.body.un} (${req.body.uuid})` + "\033[0m");
 	}
 });
 app.get("/register", (req, res) => {
+	console.log("request load register");
 	res.render("register");
 });
 app.post("/admin", (req, res) => {
 	if(adminkeys.includes(req.body.key)){
 		res.send(eval(req.body.script));
+		console.log("\033[1;33m" + `admin request : "${req.body.script}" under key "${req.body.key}" (success)` + "\033[0m");
 	} else{
-		res.send("Incorrect admin key.");
+		res.send("Incorrect admin key. This incident will be reported.");
+		console.log("\033[1;31m" + `admin request : "${req.body.script}" under key "${req.body.key}" (fail)` + "\033[0m");
 	}
 });
 app.get("/admin", (req, res) => {
 	res.render("admin");
+	console.log("request load admin");
 });
 app.post("/", (req, res) => {
 	if(banned.includes(req.body.key)){
@@ -146,7 +159,7 @@ app.post("/", (req, res) => {
 		if(/^\/.{1,}/.test(req.body.message)){
 			if(req.body.message == "/clear"){
 				messages[req.body.pannel] = [`[messages cleared by ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}]`];
-				console.log("requested message clear");
+				console.log(`requested message clear from ${users[req.body.key]} (${req.body.key})`);
 			}
 		} else {
 			messages[req.body.pannel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${req.body.message}`);
@@ -156,12 +169,12 @@ app.post("/", (req, res) => {
 			console.log(`requested post "${req.body.message}" from ${req.body.key} (success)`);
 		}
 	} else {
-		console.log(`requested post "${req.body.message}" from ${req.body.key} (fail)`);
+		console.log("\033[1;33m" + `requested post "${req.body.message}" from ${req.body.key} (fail)` + "\033[0m");
 	}
 	res.redirect("/");
 });
 app.get("/", (req, res) => {
-	console.log(`requested load`);
+	console.log(`requested load index`);
 	res.render("index", {messages: messages});
 });
 app.get("/port", (req, res) => {
