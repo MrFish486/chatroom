@@ -8,6 +8,8 @@ const bodyparser = require("body-parser");
 const polls = require("./polls.js");
 const fs = require("fs");
 const cp = require("child_process");
+const replaceProfanities = require("no-profanity").replaceProfanities;
+
 
 var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
 poll.promiseOver().then(() => {
@@ -125,9 +127,9 @@ app.post("/register", (req, res) => {
 	if(req.body.un.length > 32) {
 		res.status(413).send("Request too large. Try a name with less than 32 characters.")
 	} else if(!Object.keys(users).includes(req.body.uuid)){
-		users[req.body.uuid] = req.body.un;
+		users[req.body.uuid] = replaceProfanities(req.body.un);
 		points[req.body.uuid] = 0;
-		console.log(`registered ${req.body.uuid} as ${req.body.un} (success)`);
+		console.log(`registered ${req.body.uuid} as ${replaceProfanities(req.body.un)} (success)`);
 		res.redirect("/");
 	} else{
 		res.send(`You are already registered under name "${users[req.body.uuid]}"!`);
@@ -151,7 +153,7 @@ app.get("/admin", (req, res) => {
 	res.render("admin");
 	console.log("request load admin");
 });
-app.post("/", (req, res) => {
+app.post("/", (req, res) => {	
 	if(banned.includes(req.body.key)){
 		return res.status(403).render("banned");
 	}
@@ -162,14 +164,14 @@ app.post("/", (req, res) => {
 				console.log(`requested message clear from ${users[req.body.key]} (${req.body.key})`);
 			}
 		} else {
-			messages[req.body.pannel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${req.body.message}`);
+			messages[req.body.pannel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${replaceProfanities(req.body.message)}`);
 			if(messages[req.body.pannel].length >= 10){
 				messages[req.body.pannel].shift();
 			}
-			console.log(`requested post "${req.body.message}" from ${req.body.key} (success)`);
+			console.log(`requested post "${replaceProfanities(req.body.message)}" from ${req.body.key} (success)`);
 		}
 	} else {
-		console.log("\033[1;33m" + `requested post "${req.body.message}" from ${req.body.key} (fail)` + "\033[0m");
+		console.log("\033[1;33m" + `requested post "${replaceProfanities(req.body.message)}" from ${req.body.key} (fail)` + "\033[0m");
 	}
 	res.redirect("/");
 });
