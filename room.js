@@ -21,8 +21,10 @@ var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 var points = {};
 var update = () => {
+	console.log("\e[1;31mcued restart\e[0m");
 	messages[0].push("Restart cued");
-	console.log("cued restart");
+	save();
+	messages[0].push("Data saved");
 	cp.exec("git pull");
 	messages[0].push("Code pulled");
 	cp.exec("npm i");
@@ -59,7 +61,7 @@ var setPoll = (question, time, options) => {
 }
 var save = () => {
 	try {
-		fs.writeFileSync(__dirname + "/../stat/savedstate.json", JSON.stringify({users : users, points : points}));
+		fs.writeFileSync(__dirname + "/../stat/savedstate.json", JSON.stringify({users : users, points : points, banned : banned}));
 	} catch (e) {
 		return e;
 	}
@@ -69,12 +71,20 @@ var load = () => {
 		let q = JSON.parse(fs.readFileSync(__dirname + "/../stat/savedstate.json", "utf8"));
 		users = q.users;
 		points = q.points;
+		banned = q.banned;
 	} catch (e) {
 		return e;
 	}
 }
 
-app.use(bodyparser.json());
+try {
+	load();
+	console.log("Fetched data");
+} catch (e) {
+	console.log(`Corrupted data ${e}`);
+}
+
+app.use(bodyparser.json({limit : "10kb"}));
 app.use(cors());
 app.use(bodyparser.urlencoded({
 	extended: true
@@ -97,6 +107,9 @@ app.get("/leaderboard", (req, res) => {
 	res.render("leaderboard", {"users" : Object.values(users), "stats" : Object.values(points)});
 });
 app.post("/award", (req, res) => {
+	if(banned.includes(req.query.f)){
+		return res.status(403).render("banned");
+	}
 	if(Object.keys(users).indexOf(req.query.f) == req.query.i){
 		res.redirect("/award");
 	} else{
@@ -129,7 +142,7 @@ app.post("/", (req, res) => {
 	if(banned.includes(req.body.key)){
 		return res.status(403).render("banned");
 	}
-	if(/\S/.test(req.body.message) && req.body.message.length <= 1024){
+	if(/\S/.test(req.body.message) && req.body.message.length <= 256){
 		if(/^\/.{1,}/.test(req.body.message)){
 			if(req.body.message == "/clear"){
 				messages[req.body.pannel] = [`[messages cleared by ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}]`];
@@ -140,10 +153,10 @@ app.post("/", (req, res) => {
 			if(messages[req.body.pannel].length >= 10){
 				messages[req.body.pannel].shift();
 			}
-			console.log(`requested post "${req.body.message}" (success)`);
+			console.log(`requested post "${req.body.message}" from ${req.body.key} (success)`);
 		}
 	} else {
-		console.log(`requested post "${req.body.message}" (fail)`);
+		console.log(`requested post "${req.body.message}" from ${req.body.key} (fail)`);
 	}
 	res.redirect("/");
 });
