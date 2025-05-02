@@ -9,7 +9,7 @@ const polls = require("./polls.js");
 const fs = require("fs");
 const cp = require("child_process");
 
-var poll = new polls.poll("Are cats or dogs better?", 86400000, ["Cats", "Dogs"]);
+var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
 poll.promiseOver().then(() => {
 	poll.winners().forEach((v, i) => {
 		points[v] += 100;
@@ -91,7 +91,6 @@ app.get("/poll", (req, res) => {
 	}
 });
 app.post("/poll", (req, res) => {
-	console.log(req.query);
 	poll.answer(req.query.f, req.query.a);
 });
 app.get("/leaderboard", (req, res) => {
@@ -110,7 +109,7 @@ app.post("/register", (req, res) => {
 		points[req.body.uuid] = 0;
 		res.redirect("/");
 	} else{
-		res.send(`The id "${req.body.uuid}" id already registered under name "${users[req.body.uuid]}"!`);
+		res.send(`You are already registered under name "${users[req.body.uuid]}"!`);
 	}
 });
 app.get("/register", (req, res) => {
@@ -133,7 +132,7 @@ app.post("/", (req, res) => {
 	if(/\S/.test(req.body.message) && req.body.message.length <= 1024){
 		if(/^\/.{1,}/.test(req.body.message)){
 			if(req.body.message == "/clear"){
-				messages[req.body.pannel] = ["[messages cleared]"];
+				messages[req.body.pannel] = [`[messages cleared by ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}]`];
 				console.log("requested message clear");
 			}
 		} else {

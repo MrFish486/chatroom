@@ -37,5 +37,16 @@
 			document.getElementById("didyouwin").innerHTML = "no bonus";
 			document.getElementById("didyouwin").style.color = "red";
 		}
+		let k = localStorage.k || u();
+		localStorage.k = localStorage.k || k;
+		setInterval(() => {
+			localStorage.k = k;
+		});
+		window.onbeforeunload = () => {
+			localStorage.k = k;
+		}
+		window.onunload = () => {
+			localStorage.k = k;
+		}
 	</script>
 </body>

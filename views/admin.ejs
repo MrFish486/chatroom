@@ -4,4 +4,17 @@
 		<input id="key" type="text" name="key" autocomplete="on" placeholder="Admin key">
 		<button type="submit">Send instructions</button>
 	</form>
+	<script>
+		let k = localStorage.k || u();
+		localStorage.k = localStorage.k || k;
+		setInterval(() => {
+			localStorage.k = k;
+		});
+		window.onbeforeunload = () => {
+			localStorage.k = k;
+		}
+		window.onunload = () => {
+			localStorage.k = k;
+		}
+	</script>
 </body>

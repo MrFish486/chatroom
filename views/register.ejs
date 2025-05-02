@@ -13,9 +13,20 @@
 			<a>Name:</a><br><input id="un" type="text" name="un" autocomplete="off"><br><br>
 			<button type="submit">Register</button>
 		</form>
-		<button onclick="location.href='http://73.223.68.236:8000/'">Home</button>
+		<button onclick="location.href='/'">Home</button>
 	</div>
 	<script>
 		document.getElementById("uuid").value = localStorage.k;
+		let k = localStorage.k || u();
+		localStorage.k = localStorage.k || k;
+		setInterval(() => {
+			localStorage.k = k;
+		});
+		window.onbeforeunload = () => {
+			localStorage.k = k;
+		}
+		window.onunload = () => {
+			localStorage.k = k;
+		}
 	</script>
 </body>

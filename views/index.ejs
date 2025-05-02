@@ -81,6 +81,15 @@
 		let k = localStorage.k || u();
 		localStorage.k = localStorage.k || k;
 		setInterval(() => {
+			localStorage.k = k;
+		});
+		window.onbeforeunload = () => {
+			localStorage.k = k;
+		}
+		window.onunload = () => {
+			localStorage.k = k;
+		}
+		setInterval(() => {
 			document.getElementById("0key").value = k;
 			document.getElementById("1key").value = k;
 		});
@@ -113,15 +122,6 @@
 			n.send();
 			sent = true;
 		}, 100);
-		setInterval(() => {
-			localStorage.k = k;
-		});
-		window.onbeforeunload = () => {
-			localStorage.k = k;
-		}
-		window.onunload = () => {
-			localStorage.k = k;
-		}
 		document.addEventListener("keydown", e => {
 			if(e.key == "q" && e.ctrlKey){
 				for(let i = 0; i < 1; i ++){
