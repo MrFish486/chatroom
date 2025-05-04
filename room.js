@@ -9,6 +9,7 @@ const polls = require("./polls.js");
 const fs = require("fs");
 const cp = require("child_process");
 const replaceProfanities = require("no-profanity").replaceProfanities;
+const ss = require("./sorts.js");
 
 var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
 poll.promiseOver().then(() => {
@@ -53,7 +54,7 @@ var hash = a => {
 	return h;
 }
 var setPoll = (question, time, options) => {
-	var poll = new polls.poll(question, time, options);
+	poll = new polls.poll(question, time, options);
 	poll.promiseOver().then(() => {
 		poll.winners().forEach((v, i) => {
 			points[v] += 100;
@@ -108,7 +109,7 @@ app.post("/poll", (req, res) => {
 });
 app.get("/leaderboard", (req, res) => {
 	console.log("requested load leaderboard");
-	res.render("leaderboard", {"users" : Object.values(users), "stats" : Object.values(points)});
+	res.render("leaderboard", {"users" : ss.sorttogether(Object.values(points), Object.values(users))[1].reverse(), "stats" : ss.sorttogether(Object.values(points), Object.values(users))[0].reverse()});
 });
 app.post("/award", (req, res) => {
 	if(banned.includes(req.query.f)){
@@ -118,8 +119,9 @@ app.post("/award", (req, res) => {
 		console.log("\033[1;33m" + `${users[req.query.f]} (${req.query.f}) tried to reward themself` + "\033[0m");
 		res.redirect("/award");
 	} else{
-		points[Object.keys(points)[parseInt(req.query.i)]] ++;
-		console.log(`${users[req.query.f]} (${req.query.f}) rewarded ${Object.values(users)[req.query.i]} (${Object.keys(users)[req.query.i]}) 1 point`);
+		let rewarding = ss.sorttogether(Object.values(points), Object.keys(points))[1].reverse()[parseInt(req.query.i)];
+		points[rewarding] ++;
+		console.log(`${users[req.query.f]} (${req.query.f}) rewarded ${users[rewarding]} (${rewarding}) 1 point`);
 	}
 });
 app.post("/register", (req, res) => {
@@ -186,5 +188,5 @@ app.get("/port", (req, res) => {
 });
 
 app.listen(port, () => {
-	console.log(`App listening on port ${port}.`);
+	console.log(`App active on ${port}.`);
 });

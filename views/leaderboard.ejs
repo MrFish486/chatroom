@@ -25,7 +25,7 @@
 		<h2>Users:</h2>
 		<% for(let i = 0; i < users.length; i ++){ %>
 			<div class="d">
-				<h2>Name : <%= users[i] %></h2>
+				<h2>(#<%= i+1 %>) Name : <%= users[i] %></h2>
 				<a>Points : <%= stats[i] %></a><br><br>
 				<button onclick="let n = new XMLHttpRequest();n.open('POST','/award?i=<%= i %>&f='+localStorage.k,true);n.send('sendpoint');window.location.reload();" id="reward<%= i %>">Reward <%= users[i] %> one point</button>
 			</div>
