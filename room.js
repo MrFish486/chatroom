@@ -13,8 +13,9 @@ const ss = require("./sorts.js");
 
 var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
 poll.promiseOver().then(() => {
+	console.log(poll);
 	poll.winners().forEach((v, i) => {
-		points[v] += 1000;
+		console.log(points[v]);
 	}); 
 });
 var messages = [[], []];
@@ -57,7 +58,7 @@ var setPoll = (question, time, options) => {
 	poll = new polls.poll(question, time, options);
 	poll.promiseOver().then(() => {
 		poll.winners().forEach((v, i) => {
-			points[v] += 100;
+			points[v] = parseInt(points[v]) + 1000;
 		}); 
 	});
 }
@@ -71,6 +72,9 @@ var save = () => {
 var load = () => {
 	try {
 		let q = JSON.parse(fs.readFileSync(__dirname + "/../stat/savedstate.json", "utf8"));
+		for(let i = 0; i < Object.keys(q.points).length; i ++){
+			q[Object.keys(q.points)[i]] = parseInt(q[Object.keys(q.points)[i]]);
+		}
 		users = q.users;
 		points = q.points;
 		banned = q.banned;
