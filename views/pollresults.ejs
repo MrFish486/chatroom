@@ -31,7 +31,7 @@
 		var winners = "<%= poll.winners() %>".split(",");
 		var won = winners.includes(localStorage.k);
 		if (won) {
-			document.getElementById("didyouwin").innerHTML = "+100 points";
+			document.getElementById("didyouwin").innerHTML = "+1000 points";
 			document.getElementById("didyouwin").style.color = "green";
 		} else {
 			document.getElementById("didyouwin").innerHTML = "no bonus";

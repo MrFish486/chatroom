@@ -14,7 +14,7 @@ const ss = require("./sorts.js");
 var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
 poll.promiseOver().then(() => {
 	poll.winners().forEach((v, i) => {
-		points[v] += 100;
+		points[v] += 1000;
 	}); 
 });
 var messages = [[], []];
