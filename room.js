@@ -11,6 +11,17 @@ const cp = require("child_process");
 const replaceProfanities = require("no-profanity").replaceProfanities;
 const ss = require("./sorts.js");
 
+var xc = c => {
+	var ee;
+	var soo;
+	var see;
+	cp.exec(c, (e, so, se) => {
+		ee = e;
+		soo = so;
+		see = se;
+	});
+	return [ee, soo, see];
+}
 var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
 poll.promiseOver().then(() => {
 	console.log(poll);
@@ -23,6 +34,7 @@ var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 var points = {};
+var online = [];
 var update = () => {
 	console.log("\033[1;31m" + "cued restart" + "\033[0m");
 	messages[0].push("Restart cued");
@@ -99,6 +111,17 @@ app.use(express.static(__dirname + "/public"));
 
 app.set("view engine", "ejs");
 
+app.post("/ping", (req, res) => {
+	if(!online.includes(req.query.i)){
+		online.push(req.query.i);
+		setTimeout(() => {
+			online.splice(online.indexOf(req.query.i), 1);
+		}, 10000);
+	}
+});
+app.get("/ping", (req, res) => {
+	res.send(online.map(e=>users[e]||"Anonymous idhash."+hash(e)));
+})
 app.get("/poll", (req, res) => {
 	if(poll.over()){
 		res.render("pollresults", {poll : poll});

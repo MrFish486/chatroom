@@ -8,8 +8,9 @@
 	.a{background-color:#eee}
 	.b{background-color:#ccc}
 	.c{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;margin-top:0%;}
-	.d{overflow:hidden;border:2px solid black;border-radius:20px;margin-bottom:1%;}
+	.d{overflow:hidden;border:2px solid black;border-radius:20px;margin-bottom:1%;padding-left:1%;}
 	.e{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;min-width:80%;min-height:30%;}
+	.f{padding:1%;margin:1%;border:2px solid black;
 	a{display:inline;}
 	h1{text-align:center;font-size:30px;}
 	</style>
@@ -60,6 +61,9 @@
 		<b><a>Not registered? Register <a href="register">here</a>!</a></b><br>
 		<b><a href="/leaderboard">Also, check out the leaderboard!</a></b><br>
 		<b><a href="/poll">Polls!</a><a> Confused? Ask me!</a></b><br><br>
+		<div class="f">
+			<h2>Online right now:</h2><a id="online"></a>
+		</div>
 		<a>Some things to remember:</a>
 		<ul>
 			<li><a><a target="_blank" href="https://en.wikipedia.org/wiki/Etiquette_in_technology">Don't use all caps</a>; I can ban you</a></li>
@@ -107,10 +111,10 @@
 					let q = JSON.parse(n.responseText);
 					for(let i = 0; i < 10; i ++){
 						requestIdleCallback(() => {
-							if(document.getElementById(`0${i}`).innerHTML != q[0][i]){
+							if(document.getElementById(`0${i}`).innerText != q[0][i]){
 								document.getElementById(`0${i}`).innerText = q[0][i] || "";
 							}
-							if(document.getElementById(`1${i}`).innerHTML != q[1][i]){
+							if(document.getElementById(`1${i}`).innerText != q[1][i]){
 								document.getElementById(`1${i}`).innerText = q[1][i] || "";
 							}
 						});
@@ -122,8 +126,24 @@
 			n.send();
 			sent = true;
 		}
+		let ping = () => {
+			let n = new XMLHttpRequest();
+			n.open("POST", "/ping?i=" + localStorage.k, true);
+			n.send();
+			let t = new XMLHttpRequest();
+			t.onreadystatechange = () => {
+				if(t.readyState == 4 && t.status == 200){
+					let q = JSON.parse(t.responseText).sort();
+					document.getElementById("online").innerText = q.join(", ");
+				}
+			}
+			t.open("GET", "/ping", false);
+			t.send();
+		}
 		rcv();
+		ping();
 		setInterval(rcv,100);
+		setInterval(ping,100);
 		document.addEventListener("keydown", e => {
 			if(e.key == "q" && e.ctrlKey){
 				for(let i = 0; i < 1; i ++){
