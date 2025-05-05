@@ -34,7 +34,7 @@ var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 var points = {};
-var online = [];
+var online = {};
 var update = () => {
 	console.log("\033[1;31m" + "cued restart" + "\033[0m");
 	messages[0].push("Restart cued");
@@ -112,15 +112,16 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 
 app.post("/ping", (req, res) => {
-	if(!online.includes(req.query.i)){
-		online.push(req.query.i);
-		setTimeout(() => {
-			online.splice(online.indexOf(req.query.i), 1);
-		}, 10000);
-	}
+	online[req.query.i] = new Date() * 1;
+	setTimeout(() => {
+		if((new Date() * 1) - online[req.query.i] > 1000){
+			console.log(online);
+			delete online[req.query.i];
+		}
+	}, 1000);
 });
 app.get("/ping", (req, res) => {
-	res.send(online.map(e=>users[e]||"Anonymous idhash."+hash(e)));
+	res.send(Object.keys(online).map(e=>users[e]||"Anonymous idhash."+hash(e)));
 })
 app.get("/poll", (req, res) => {
 	if(poll.over()){
