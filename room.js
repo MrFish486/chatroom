@@ -119,11 +119,11 @@ app.post("/award", (req, res) => {
 	if(banned.includes(req.query.f)){
 		return res.status(403).render("banned");
 	}
-	if(Object.keys(users).indexOf(req.query.f) == req.query.i){
+	let rewarding = ss.sorttogether(Object.values(points), Object.keys(points))[1].reverse()[parseInt(req.query.i)];
+	if(rewarding == req.query.f){
 		console.log("\033[1;33m" + `${users[req.query.f]} (${req.query.f}) tried to reward themself` + "\033[0m");
 		res.redirect("/award");
 	} else{
-		let rewarding = ss.sorttogether(Object.values(points), Object.keys(points))[1].reverse()[parseInt(req.query.i)];
 		points[rewarding] ++;
 		console.log(`${users[req.query.f]} (${req.query.f}) rewarded ${users[rewarding]} (${rewarding}) 1 point`);
 	}

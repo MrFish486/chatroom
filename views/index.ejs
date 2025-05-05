@@ -94,7 +94,7 @@
 			document.getElementById("1key").value = k;
 		});
 		let sent = true;
-		let rcv = setInterval(() => {
+		let rcv = () => {
 			if(!sent){
 				//Kill self
 				clearInterval(rcv);
@@ -108,10 +108,10 @@
 					for(let i = 0; i < 10; i ++){
 						requestIdleCallback(() => {
 							if(document.getElementById(`0${i}`).innerHTML != q[0][i]){
-								document.getElementById(`0${i}`).innerHTML = q[0][i] || "";
+								document.getElementById(`0${i}`).innerText = q[0][i] || "";
 							}
 							if(document.getElementById(`1${i}`).innerHTML != q[1][i]){
-								document.getElementById(`1${i}`).innerHTML = q[1][i] || "";
+								document.getElementById(`1${i}`).innerText = q[1][i] || "";
 							}
 						});
 					}
@@ -121,7 +121,9 @@
 			sent = false;
 			n.send();
 			sent = true;
-		}, 100);
+		}
+		rcv();
+		setInterval(rcv,100);
 		document.addEventListener("keydown", e => {
 			if(e.key == "q" && e.ctrlKey){
 				for(let i = 0; i < 1; i ++){
