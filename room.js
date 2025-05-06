@@ -189,13 +189,13 @@ app.post("/", (req, res) => {
 	if(/\S/.test(req.body.message) && req.body.message.length <= 256){
 		if(/^\/.{1,}/.test(req.body.message)){
 			if(req.body.message == "/clear"){
-				messages[req.body.pannel] = [`[messages cleared by ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}]`];
+				messages[req.body.panel] = [`[messages cleared by ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}]`];
 				console.log(`requested message clear from ${users[req.body.key]} (${req.body.key})`);
 			}
 		} else {
-			messages[req.body.pannel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${replaceProfanities(req.body.message)}`);
-			if(messages[req.body.pannel].length >= 10){
-				messages[req.body.pannel].shift();
+			messages[req.body.panel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${replaceProfanities(req.body.message)}`);
+			if(messages[req.body.panel].length >= 10){
+				messages[req.body.panel].shift();
 			}
 			console.log(`requested post "${replaceProfanities(req.body.message)}" from ${req.body.key} (success)`);
 		}
