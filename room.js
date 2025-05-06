@@ -114,13 +114,13 @@ app.set("view engine", "ejs");
 app.post("/ping", (req, res) => {
 	online[req.query.i] = new Date() * 1;
 	setTimeout(() => {
-		if((new Date() * 1) - online[req.query.i] > 1000){
-			console.log(online);
+		if(((new Date() * 1) - online[req.query.i]) > 1000){
 			delete online[req.query.i];
 		}
-	}, 1000);
+	}, 2000);
 });
 app.get("/ping", (req, res) => {
+	console.log(online, new Date() * 1);
 	res.send(Object.keys(online).map(e=>users[e]||"Anonymous idhash."+hash(e)));
 })
 app.get("/poll", (req, res) => {
