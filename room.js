@@ -29,7 +29,7 @@ poll.promiseOver().then(() => {
 		console.log(points[v]);
 	}); 
 });
-var messages = [["Pannel 1 init at " + new Date().getTime()], ["Pannel 2 init at " + new Date().getTime()]];
+var messages = [["Panel 1 init at " + new Date().getTime()], ["Panel 2 init at " + new Date().getTime()]];
 var banned = [];
 var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
