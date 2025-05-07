@@ -192,6 +192,11 @@ app.post("/", (req, res) => {
 				messages[req.body.panel] = [`[messages cleared by ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}]`];
 				console.log(`requested message clear from ${users[req.body.key]} (${req.body.key})`);
 			}
+			else if(req.body.message.split(" ")[0] == "/clear"){
+				let n = req.body.message.split(" ");
+				n.shift();
+				messages[req.body.panel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${replaceProfanities(n.join(" ").split("").reverse().join(""))}`)
+			}
 		} else {
 			messages[req.body.panel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${replaceProfanities(req.body.message)}`);
 			if(messages[req.body.panel].length >= 10){
