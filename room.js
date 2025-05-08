@@ -120,7 +120,6 @@ app.post("/ping", (req, res) => {
 	}, 2000);
 });
 app.get("/ping", (req, res) => {
-	console.log(online, new Date() * 1);
 	res.send(Object.keys(online).map(e=>users[e]||"Anonymous idhash."+hash(e)));
 })
 app.get("/poll", (req, res) => {
@@ -192,10 +191,14 @@ app.post("/", (req, res) => {
 				messages[req.body.panel] = [`[messages cleared by ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}]`];
 				console.log(`requested message clear from ${users[req.body.key]} (${req.body.key})`);
 			}
-			else if(req.body.message.split(" ")[0] == "/clear"){
+			else if(req.body.message.split(" ")[0] == "/b"){
 				let n = req.body.message.split(" ");
 				n.shift();
-				messages[req.body.panel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${replaceProfanities(n.join(" ").split("").reverse().join(""))}`)
+				messages[req.body.panel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${'‮' + replaceProfanities(n.join(" "))}`)
+				if(messages[req.body.panel].length >= 10){
+					messages[req.body.panel].shift();
+				}
+				console.log(`requested post "${replaceProfanities(req.body.message)}" from ${req.body.key} (success)`);
 			}
 		} else {
 			messages[req.body.panel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${replaceProfanities(req.body.message)}`);
