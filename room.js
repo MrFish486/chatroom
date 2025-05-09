@@ -10,6 +10,7 @@ const fs = require("fs");
 const cp = require("child_process");
 const replaceProfanities = require("no-profanity").replaceProfanities;
 const ss = require("./sorts.js");
+const ge = require("./garden.js");
 
 var xc = c => {
 	var ee;
@@ -35,6 +36,12 @@ var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
 var users = {};
 var points = {};
 var online = {};
+var water = 0.6;
+var garden = new ge.garden(10, 10, 0);
+setInterval(() => {
+	garden.tick(water, 0.25);
+	water -= 0.05;
+}, 10000);
 var update = () => {
 	console.log("\033[1;31m" + "cued restart" + "\033[0m");
 	messages[0].push("Restart cued");
@@ -111,6 +118,16 @@ app.use(express.static(__dirname + "/public"));
 
 app.set("view engine", "ejs");
 
+
+app.post("/garden", (req, res) => {
+	console.log("Garden watered");
+	if (water + 0.05 <= 1) {
+		water += 0.05;
+	}
+});
+app.get("/garden", (req, res) => {
+	res.render("garden", {garden : JSON.stringify(garden), water : water});
+});
 app.post("/ping", (req, res) => {
 	online[req.query.i] = new Date() * 1;
 	setTimeout(() => {

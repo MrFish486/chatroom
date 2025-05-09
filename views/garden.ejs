@@ -1,0 +1,54 @@
+<head>
+	<style>
+	*{font-size:20px;font-family:helvetica}
+	body{background-image:url("images/tile2.png");background-repeat:repeat;display:flex;flex-wrap:wrap;}
+	button{background-color:#eee;border:2px solid black;border-radius:10px;min-width:10%;}
+	input{min-width:80%;}
+	.a,.b{font-size:20px;min-width:50%;display:block;padding-left:1%;}
+	.a{background-color:#eee}
+	.b{background-color:#ccc}
+	.c{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;margin-top:0%;}
+	.d{overflow:hidden;border:2px solid black;border-radius:20px;margin-bottom:1%;padding-left:1%;padding-left:0px}
+	.e{padding:1%;margin:1% 5%;background-color:#ace;border-radius:20px;flex:1;min-width:80%;min-height:30%;}
+	.f{padding:1%;margin:1%;border:2px solid black;
+	a{display:inline;}
+	h1{text-align:center;font-size:30px;}
+	canvas{border:2px solid black}
+	meter{display:block;box-sizing:border-box;}
+	</style>
+</head>
+<body>
+	<div class="e">
+		<h1>Community garden</h1>
+		<a href="/">Home</a><br>
+		<canvas width="500px" height="500px" id="main"></canvas><br>
+		<a>Water:</a>
+		<meter min="0" max="1" value="<%= water %>"></meter><br>
+		<button onclick="let x=new XMLHttpRequest();x.open('POST','/garden',true);x.send();window.location.reload();">Water</button><br>
+	</div>
+	<script>
+		var garden = JSON.parse("<%= garden %>".replaceAll("&#34;", '"'));
+		var width = garden.width;
+		var height = garden.height;
+		var water = <%= water %>;
+		let c = document.getElementById("main").getContext("2d");
+		let scalex = c.canvas.width / width;
+		let scaley = c.canvas.height / height;
+		for (let x = 0; x < width; x ++) {
+			for (let y = 0; y < height; y ++) {
+				if (garden.world[x][y] == 0) {
+					c.beginPath();
+					c.rect(scalex * x, scaley * y, scalex, scaley);
+					c.fillStyle = "#4f0d0d";
+					c.fill();
+					c.closePath();
+				} else if (garden.world[x][y] == 1) {
+					c.beginPath();
+					c.rect(scalex * x, scaley * y, scalex, scaley);
+					c.fillStyle = "#3eff28";
+					c.fill();
+					c.closePath();
+				}
+			}
+		}
+	</script>
