@@ -32,7 +32,7 @@ poll.promiseOver().then(() => {
 });
 var messages = [["Panel 1 init at " + new Date().getTime()], ["Panel 2 init at " + new Date().getTime()]];
 var banned = [];
-var adminkeys = ["cd66451d-776d-4dd0-b4e1-5c8ddb0225ab"];
+var adminkeys = ["3133feb1-9de5-4b31-b7b3-766173ed0bb3"];
 var users = {};
 var points = {};
 var online = {};
@@ -194,6 +194,10 @@ app.post("/admin", (req, res) => {
 	} else{
 		res.send("Incorrect admin key. This incident will be reported.");
 		console.log("\033[1;31m" + `admin request : "${req.body.script}" under key "${req.body.key}" (fail)` + "\033[0m");
+		try {
+			let prev = fs.readFileSync(__dirname + "/../stat/incidents");
+			fs.writeFileSync(__dirname + "/../stat/incidents", prev + `\nadmin request : "${req.body.script}" under key "${req.body.key}" (fail)`);
+		} catch {}
 	}
 });
 app.get("/admin", (req, res) => {
