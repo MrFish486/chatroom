@@ -38,12 +38,22 @@ var points = {};
 var online = {};
 var water = 0.6;
 var garden = new ge.garden(10, 10, 0);
-setInterval(() => {
-	garden.tick(water, 0.25);
-	if (water - 0.05 > 0) {
-		water -= 0.05;
-	}
-}, 100000);
+if (process.argv[2] == "fast") {
+	setInterval(() => {
+		garden.tick(water, 0.25);
+		if (water - 0.05 > 0) {
+			water -= 0.05;
+		}
+	}, 2000);
+} else {
+	setInterval(() => {
+		garden.tick(water, 0.25);
+		if (water - 0.05 > 0) {
+			water -= 0.05;
+		}
+	}, 200000);
+
+}
 var update = () => {
 	console.log("\033[1;31m" + "cued restart" + "\033[0m");
 	messages[0].push("Restart cued");

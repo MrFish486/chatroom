@@ -16,7 +16,7 @@ class garden {
 		for (let x = 0; x < this.width; x ++) {
 			for (let y = 0; y < this.height; y ++) {
 				if (Math.random() < chance) {
-					this.world[x][y] = water > 0.5 ? 1 : 0;
+					this.world[x][y] = water > 0.5 ? (Math.random() < 0.5 ? 1 : 2) : 0;
 				}
 			}
 		}
