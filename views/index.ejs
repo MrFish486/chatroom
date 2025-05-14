@@ -58,10 +58,11 @@
 	</div><br>
 	<div class="e">
 		<h1>MrFish486's Chatroom</h1>
+		<h2>Celebrating update #64!</h2>
 		<b><a>Not registered? Register <a href="register">here</a>!</a></b><br>
 		<b><a href="/leaderboard">Also, check out the leaderboard!</a></b><br>
-		<b><a href="/poll">Polls!</a><a> Confused? Ask me!</a></b><br><br>
-		<b><a href="/garden">Community garden!</a></b>
+		<b><a href="/poll">Polls!</a><a> Confused? Ask me!</a></b><br>
+		<b><a href="/garden">Community garden!</a></b><br><br>
 		<div class="f">
 			<h2>Online right now:</h2><a id="online"></a>
 		</div>
@@ -77,6 +78,7 @@
 	</div>
 	<script>
 	(() => {
+		Notification.requestPermission();
 		let u = () => {
 			return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
 				(+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
@@ -99,6 +101,7 @@
 			document.getElementById("1key").value = k;
 		});
 		let sent = true;
+		let lastnotf = new Date() * 1;
 		let rcv = () => {
 			if(!sent){
 				//Kill self
@@ -119,6 +122,10 @@
 								document.getElementById(`1${i}`).innerText = q[1][i] || "";
 							}
 						});
+					}
+					if (lastnotf < q[2].time) {
+						new Notification("[MrFish486's chatroom] " + q[2].author + " : " + q[2].content);
+						lastnotf = new Date() * 1;
 					}
 				}
 			}

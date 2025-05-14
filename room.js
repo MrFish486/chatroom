@@ -37,6 +37,7 @@ var users = {};
 var points = {};
 var online = {};
 var water = 0.6;
+var recentMessage = {};
 var garden = new ge.garden(10, 10, 0);
 if (process.argv[2] == "fast") {
 	setInterval(() => {
@@ -187,6 +188,10 @@ app.post("/register", (req, res) => {
 		users[req.body.uuid] = replaceProfanities(req.body.un);
 		points[req.body.uuid] = 0;
 		console.log(`registered ${req.body.uuid} as ${replaceProfanities(req.body.un)} (success)`);
+		recentMessage.content = `A new user has registered : '${replaceProfanities(req.body.un)}'`;
+		recentMessage.time = new Date() * 1;
+		recentMessage.author = "server";
+
 		res.redirect("/");
 	} else{
 		res.send(`You are already registered under name "${users[req.body.uuid]}"!`);
@@ -227,10 +232,13 @@ app.post("/", (req, res) => {
 			else if(req.body.message.split(" ")[0] == "/b"){
 				let n = req.body.message.split(" ");
 				n.shift();
-				messages[req.body.panel].push(`[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${'‮' + replaceProfanities(n.join(" "))}`)
+				messages[req.body.panel].push(`${'‮' + replaceProfanities(n.join(" "))}`)
 				if(messages[req.body.panel].length >= 10){
 					messages[req.body.panel].shift();
 				}
+				recentMessage.content = `[${new Date().toLocaleString().split(" ")[1]}] ${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)} : ${'‮' + replaceProfanities(n.join(" "))}`;
+				recentMessage.time = new Date() * 1;
+				recentMessage.author = `${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}`;
 				console.log(`requested post "${replaceProfanities(req.body.message)}" from ${req.body.key} (success)`);
 			}
 		} else {
@@ -238,6 +246,9 @@ app.post("/", (req, res) => {
 			if(messages[req.body.panel].length >= 10){
 				messages[req.body.panel].shift();
 			}
+			recentMessage.content = `${replaceProfanities(req.body.message)}`;
+			recentMessage.time = new Date() * 1;
+			recentMessage.author = `${users[req.body.key] || "(anonymous) idhash." + hash(req.body.key)}`;
 			console.log(`requested post "${replaceProfanities(req.body.message)}" from ${req.body.key} (success)`);
 		}
 	} else {
@@ -253,7 +264,7 @@ app.get("/port", (req, res) => {
 	if(banned.includes(req.socket.remoteAddress)){
 		return res.status(403).render("banned");
 	}
-	res.json(messages);
+	res.json(messages.concat([recentMessage]));
 });
 
 app.listen(port, () => {
