@@ -267,6 +267,8 @@ app.get("/port", (req, res) => {
 	res.json(messages.concat([recentMessage]));
 });
 
-app.listen(port, () => {
+/*app.listen(port, () => {
 	console.log(`App active on ${port}.`);
-});
+});*/
+
+module.exports.app = app;
