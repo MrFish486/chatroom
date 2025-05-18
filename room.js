@@ -12,6 +12,8 @@ const replaceProfanities = require("no-profanity").replaceProfanities;
 const ss = require("./sorts.js");
 const ge = require("./garden.js");
 
+const adminkeys = JSON.parse(fs.readFileSync(__dirname + "/secret.txt", "utf8")); // If this throws an error, try making a file called 'secret.txt' and putting a list of secret keys in it using json array format.
+
 var xc = c => {
 	var ee;
 	var soo;
@@ -32,7 +34,6 @@ poll.promiseOver().then(() => {
 });
 var messages = [["Panel 1 init at " + new Date().getTime()], ["Panel 2 init at " + new Date().getTime()]];
 var banned = [];
-var adminkeys = ["3133feb1-9de5-4b31-b7b3-766173ed0bb3"];
 var users = {};
 var points = {};
 var online = {};
