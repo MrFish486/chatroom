@@ -25,7 +25,7 @@ var xc = c => {
 	});
 	return [ee, soo, see];
 }
-var poll = new polls.poll("Are cats or dogs better?", 28800000, ["Cats", "Dogs"]);
+var poll = new polls.poll("Jiff or Gif", 28800000, ["Jiff", "Gif"]);
 poll.promiseOver().then(() => {
 	console.log(poll);
 	poll.winners().forEach((v, i) => {
@@ -37,6 +37,8 @@ var banned = [];
 var users = {};
 var points = {};
 var online = {};
+const bounties = ["1", "2"];
+console.log(bounties);
 var water = 0.6;
 var recentMessage = {};
 var garden = new ge.garden(10, 10, 0);
@@ -97,7 +99,7 @@ var setPoll = (question, time, options) => {
 }
 var save = () => {
 	try {
-		fs.writeFileSync(__dirname + "/../stat/savedstate.json", JSON.stringify({users : users, points : points, banned : banned}));
+		fs.writeFileSync(__dirname + "/../stat/savedstate.json", JSON.stringify({users : users, points : points, banned : banned, bounties : bounties}));
 	} catch (e) {
 		return e;
 	}
@@ -111,6 +113,7 @@ var load = () => {
 		users = q.users;
 		points = q.points;
 		banned = q.banned;
+		bounties = q.bounties;
 	} catch (e) {
 		return e;
 	}
@@ -132,11 +135,16 @@ app.use(express.static(__dirname + "/public"));
 
 app.set("view engine", "ejs");
 
-
+app.get("/unknownusers", (req, res) => {
+	res.render("bounties", {b: bounties || []})
+	console.log(bounties)
+});
 app.post("/garden", (req, res) => {
 	console.log("Garden watered");
-	if (water + 0.05 <= 1) {
+	if (water + 0.05 < 1) {
 		water += 0.05;
+	} else {
+		water = 1;
 	}
 });
 app.get("/garden", (req, res) => {

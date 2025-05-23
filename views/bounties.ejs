@@ -13,18 +13,25 @@
 	.f{padding:1%;margin:1%;border:2px solid black;}
 	a{display:inline;}
 	h1{text-align:center;font-size:30px;}
+	h2{margin-left:10px;}
 	canvas{border:2px solid black}
 	meter{display:block;box-sizing:border-box;}
 	</style>
 </head>
 <body>
 	<div class="e">
-		<h1>Community Garden</h1>
-		<a href="/">Home</a><br>
-		<canvas width="500px" height="500px" id="main"></canvas><br>
-		<a>Water:</a>
-		<meter min="0" max="1" value="<%= water %>"></meter><br>
-		<button onclick="let x=new XMLHttpRequest();x.open('POST','/garden',true);x.send();window.location.reload();">Water</button><br>
+		<h1>Unknown users</h1>
+		<a href="/">Home</a><br><br>
+		<a>If you are here, tell someone on the chat who you are.</a><br><br>
+		<% if (b.length != 0) { %>
+			<% b.forEach(a => { %>
+				<div class="d">
+					<h2><%= a %></h2>
+				</div>
+			<% }) %>
+		<% } else { %>
+			<br><a>There are no unknown users.</a>
+		<% } %>
 	</div>
 	<script>
 		let k = localStorage.k || u();
@@ -37,21 +44,6 @@
 		}
 		window.onunload = () => {
 			localStorage.k = k;
-		}
-		var images = ["/images/dirt.svg", "/images/grass.svg", "/images/flower.svg"].map(e=>{var q=new Image();q.src=e;return q});
-		var garden = JSON.parse("<%= garden %>".replaceAll("&#34;", '"'));
-		var width = garden.width;
-		var height = garden.height;
-		var water = <%= water %>;
-		let c = document.getElementById("main").getContext("2d");
-		let scalex = c.canvas.width / width;
-		let scaley = c.canvas.height / height;
-		window.onload = () => {
-			for (let x = 0; x < width; x ++) {
-				for (let y = 0; y < height; y ++) {
-					c.drawImage(images[garden.world[x][y]], scalex * x, scaley * y, scalex, scaley);
-				}
-			}
 		}
 	</script>
 </body>
