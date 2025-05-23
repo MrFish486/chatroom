@@ -136,7 +136,6 @@ app.set("view engine", "ejs");
 
 app.get("/unknownusers", (req, res) => {
 	res.render("bounties", {b: bounties || []})
-	console.log(bounties)
 });
 app.post("/garden", (req, res) => {
 	console.log("Garden watered");
